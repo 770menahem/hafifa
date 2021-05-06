@@ -24,7 +24,7 @@ export const groupApi = {
       },
       {
         path: "groups",
-        select: "groupName groups persons -_id",
+        // select: "groupName groups persons -_id",
       },
     ]);
   },
