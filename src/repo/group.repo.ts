@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
-import groupSchema from "../model/group";
+import groupSchema from "../model/group.model";
 
 const Group = mongoose.model("Group", groupSchema);
-
-export default Group;
 
 export const groupApi = {
   create: async (groupName: string, parentGroup: string) => {

@@ -1,4 +1,4 @@
-import { groupApi } from "../repo/groupRepo";
+import { groupApi } from "../repo/group.repo";
 
 const createGroup = async (groupName: string, parentGroup: string) => {
   const parentId = (await groupApi.oneByField({ groupName: parentGroup }))._id;

@@ -1,7 +1,6 @@
 import express from "express";
 import morgan from "morgan";
 import { connectDB } from "./dbConnect";
-import Group from "./repo/groupRepo";
 import groupRouter from "./route/group.route";
 
 const app = express();
