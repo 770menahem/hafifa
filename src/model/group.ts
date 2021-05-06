@@ -1,8 +1,16 @@
 import { Schema } from "mongoose";
 
-const person = new Schema({
-  groupName: { type: String, unique: true },
-  persons: [{ type: Schema.Types.ObjectId, ref: "Person" }],
+const group = new Schema({
+  groupName: { type: String, unique: true, required: true },
+  parentGroup: { type: Schema.Types.ObjectId, ref: "Group" },
+  persons: [{ type: Schema.Types.ObjectId, ref: "People" }],
+  groups: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Group",
+      unique: true,
+    },
+  ],
 });
 
-export default person;
+export default group;
