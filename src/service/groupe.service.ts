@@ -1,4 +1,5 @@
 import { groupApi } from "../repo/group.repo";
+import personService from "./person.service";
 
 const createGroup = async (groupName: string, parentGroup: string) => {
   const parentId = (await groupApi.oneByField({ groupName: parentGroup }))._id;
@@ -153,6 +154,20 @@ const updateName = async (name: string, newName: string) => {
   return updatedGroup;
 };
 
+const isInGroup = async (firstName: string, groupName: string) => {
+  const group = await getByField("groupName", groupName);
+  if (!group) throw `${groupName} doesn't exists`;
+
+  const person = await personService.get(firstName);
+  if (!person) throw `${firstName} doesn't exists`;
+
+  if (group.persons.includes(person._id)) {
+    return { group, person };
+  } else {
+    throw `${firstName} doesn't exists in ${groupName}`;
+  }
+};
+
 const getPersonGroups = async (id: string) => {
   const groups = await groupApi.getByPersonId(id);
 
@@ -165,6 +180,7 @@ const insertPersonToGroup = async (groupName: string, id: object) => {
 
   return await group.save();
 };
+
 const removePersonFromGroup = async (groupName: string, id: object) => {
   const group = await getByField("groupName", groupName);
   const personNum = group.persons.length;
@@ -186,5 +202,6 @@ export const groupService = {
   updateName,
   getPersonGroups,
   insertPersonToGroup,
-  removePersonFromGroup: removePersonFromGroup,
+  removePersonFromGroup,
+  isInGroup,
 };

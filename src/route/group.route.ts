@@ -60,4 +60,16 @@ groupRouter.post("/move/:toMove/to/:moveTo", async (req: any, res: any) => {
   res.send(result);
 });
 
+groupRouter.get("/:firstName/group/:groupName", async (req, res) => {
+  const firstName = req.params.firstName;
+  const groupName = req.params.groupName;
+
+  try {
+    const groupAndPerson = await groupService.isInGroup(firstName, groupName);
+
+    res.send(groupAndPerson);
+  } catch (error) {
+    res.send(error);
+  }
+});
 export default groupRouter;

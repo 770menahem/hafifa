@@ -17,6 +17,6 @@ export const groupApi = {
     return await Group.findOne(fields);
   },
   getByPersonId: async (id: string) => {
-    return await Group.find({ persons: id });
+    return await Group.find({ persons: id }, "_id groupName");
   },
 };
