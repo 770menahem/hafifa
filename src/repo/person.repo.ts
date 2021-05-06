@@ -7,6 +7,9 @@ const personApi = {
   getAll: async () => {
     return await Person.find({});
   },
+  getById: async (id: string) => {
+    return await Person.findById(id);
+  },
   add: async (firstName: string, lastName: string) => {
     return await new Person({ firstName, lastName }).save();
   },

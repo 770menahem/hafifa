@@ -1,3 +1,4 @@
+import group from "../model/group.model";
 import { groupApi } from "../repo/group.repo";
 import personService from "./person.service";
 
@@ -193,7 +194,15 @@ const removePersonFromGroup = async (groupName: string, id: object) => {
   return await group.save();
 };
 
-export const groupService = {
+const getGroupChildren = async (groupName: string) => {
+  const group = (await groupApi.getByFieldPopulated({ groupName })).toObject();
+
+  await populateGroups(group);
+
+  return group;
+};
+
+export default {
   getAllGroups,
   connectGroups,
   moveGroup,
@@ -204,4 +213,17 @@ export const groupService = {
   insertPersonToGroup,
   removePersonFromGroup,
   isInGroup,
+  getGroupChildren,
 };
+
+async function populateGroups(group: any) {
+  for (let i = 0; i < group.groups.length; i++) {
+    group.groups[i] = await groupApi.getByFieldPopulated({
+      _id: group.groups[i],
+    });
+
+    if (group.groups[i].groups.length > 0) {
+      await populateGroups(group.groups[i]);
+    }
+  }
+}

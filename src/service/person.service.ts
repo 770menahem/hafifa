@@ -1,5 +1,5 @@
 import personApi from "./../repo/person.repo";
-import { groupService } from "./groupe.service";
+import groupService from "./group.service";
 
 const personService = {
   getAll: async () => {
@@ -7,6 +7,9 @@ const personService = {
   },
   add: async (firstName: string, lastName: string) => {
     return await personApi.add(firstName, lastName);
+  },
+  getById: async (id: string) => {
+    return await personApi.getById(id);
   },
   del: async (firstName: string, lastName: string) => {
     return await personApi.del(firstName, lastName);

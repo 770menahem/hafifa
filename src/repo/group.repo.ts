@@ -16,6 +16,18 @@ export const groupApi = {
   oneByField: async (fields: object) => {
     return await Group.findOne(fields);
   },
+  getByFieldPopulated: async (fields: object) => {
+    return await Group.findOne(fields).populate([
+      {
+        path: "persons",
+        select: "firstName -_id",
+      },
+      {
+        path: "groups",
+        select: "groupName groups persons -_id",
+      },
+    ]);
+  },
   getByPersonId: async (id: string) => {
     return await Group.find({ persons: id }, "_id groupName");
   },

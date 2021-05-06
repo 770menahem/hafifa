@@ -1,5 +1,5 @@
 import express from "express";
-import { groupService } from "./../service/groupe.service";
+import groupService from "../service/group.service";
 
 const groupRouter = express.Router();
 
@@ -72,4 +72,17 @@ groupRouter.get("/:firstName/group/:groupName", async (req, res) => {
     res.send(error);
   }
 });
+
+groupRouter.get("/:groupName/all", async (req, res) => {
+  const groupName = req.params.groupName;
+
+  try {
+    const groupChildren = await groupService.getGroupChildren(groupName);
+
+    res.send(groupChildren || "no groups an people in this group");
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 export default groupRouter;
