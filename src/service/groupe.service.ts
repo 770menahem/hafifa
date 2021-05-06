@@ -153,6 +153,30 @@ const updateName = async (name: string, newName: string) => {
   return updatedGroup;
 };
 
+const getPersonGroups = async (id: string) => {
+  const groups = await groupApi.getByPersonId(id);
+
+  return groups;
+};
+
+const insertPersonToGroup = async (groupName: string, id: object) => {
+  const group = await getByField("groupName", groupName);
+  group.persons.push(id);
+
+  return await group.save();
+};
+const removePersonFromGroup = async (groupName: string, id: object) => {
+  const group = await getByField("groupName", groupName);
+  const personNum = group.persons.length;
+  group.persons.remove(id);
+
+  if (personNum === group.persons.length) {
+    throw "person doe's not exists";
+  }
+
+  return await group.save();
+};
+
 export const groupService = {
   getAllGroups,
   connectGroups,
@@ -160,4 +184,7 @@ export const groupService = {
   createGroup,
   getByField,
   updateName,
+  getPersonGroups,
+  insertPersonToGroup,
+  removePersonFromGroup: removePersonFromGroup,
 };
