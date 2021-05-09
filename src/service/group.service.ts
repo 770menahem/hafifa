@@ -205,6 +205,11 @@ const getPersonGroups = async (id: string) => {
 
 const insertPersonToGroup = async (groupName: string, id: object) => {
   const group = await getByField("groupName", groupName);
+
+  if (group.persons.includes(id)) {
+    return { error: "person already in group", group };
+  }
+
   group.persons.push(id);
 
   return await group.save();
@@ -212,7 +217,9 @@ const insertPersonToGroup = async (groupName: string, id: object) => {
 
 const removePersonFromGroup = async (groupName: string, id: object) => {
   const group = await getByField("groupName", groupName);
+
   const personNum = group.persons.length;
+
   group.persons.remove(id);
 
   if (personNum === group.persons.length) {
