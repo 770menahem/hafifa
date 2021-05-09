@@ -45,7 +45,9 @@ const deletePerson = async (req: Request, res: Response) => {
   const lastName = req.body.lastName;
 
   try {
-    res.send(await personService.del(firstName, lastName));
+    res.send(
+      (await personService.del(firstName, lastName)) || "Nothing to delete "
+    );
   } catch (error) {
     res.status(400).send(`Can't add ${firstName} ${lastName}`);
   }

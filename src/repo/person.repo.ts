@@ -21,7 +21,7 @@ const personApi = {
     return await person.save();
   },
   del: async (firstName: string, lastName: string) => {
-    return await Person.remove({ firstName, lastName });
+    return await Person.findOneAndDelete({ firstName, lastName });
   },
   get: async (firstName: string) => {
     return await Person.findOne({ firstName });
