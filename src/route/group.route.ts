@@ -12,7 +12,7 @@ groupRouter.get("/:name/all", groupController.allHierarchy);
 
 groupRouter.get("/fields/:key/:value", groupController.findByField);
 
-groupRouter.get("/", groupController.allGroups);
+groupRouter.get("/all", groupController.allGroups);
 
 groupRouter.post("/create/:name/parent/:parent", groupController.createGroup);
 

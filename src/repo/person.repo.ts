@@ -10,6 +10,9 @@ const personApi = {
   getById: async (id: string) => {
     return await Person.findById(id);
   },
+  getByName: async (firstName: string) => {
+    return await Person.findOne({ firstName });
+  },
   add: async (firstName: string, lastName: string) => {
     return await new Person({ firstName, lastName }).save();
   },
@@ -22,9 +25,6 @@ const personApi = {
   },
   del: async (firstName: string, lastName: string) => {
     return await Person.findOneAndDelete({ firstName, lastName });
-  },
-  get: async (firstName: string) => {
-    return await Person.findOne({ firstName });
   },
 };
 

@@ -10,7 +10,7 @@ const getById = async (id: string) => {
   return await personApi.getById(id);
 };
 const getGroups = async (firstName: string) => {
-  const person = await personApi.get(firstName);
+  const person = await personApi.getByName(firstName);
 
   const groups = await groupService.getPersonGroups(person._id);
 
@@ -30,18 +30,18 @@ const changeLastName = async (firstName: string, lastName: string) => {
   return await personApi.changeLastName(firstName, lastName);
 };
 const get = async (firstName: string) => {
-  return await personApi.get(firstName);
+  return await personApi.getByName(firstName);
 };
 
 const addPersonToGroup = async (firstName: string, groupName: string) => {
-  const person = await personApi.get(firstName);
+  const person = await personApi.getByName(firstName);
 
   const group = await groupService.insertPersonToGroup(groupName, person._id);
 
   return group;
 };
 const removePersonFromGroup = async (firstName: string, groupName: string) => {
-  const person = await personApi.get(firstName);
+  const person = await personApi.getByName(firstName);
 
   const group = await groupService.removePersonFromGroup(groupName, person._id);
 

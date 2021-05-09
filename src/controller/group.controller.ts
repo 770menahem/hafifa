@@ -16,14 +16,42 @@ const createGroup = async (req: Request, res: Response) => {
   }
 };
 
-const deleteGroup = async (req: Request, res: Response) => {
-  const name = req.params.name;
-  try {
-    return res.send(await groupService.deleteGroupeByName(name));
-  } catch (error) {
-    const eMsg = `${error}`.split("error")[0];
+const allGroups = async (_: Request, res: Response) => {
+  const allGroups = await groupService.getAllGroups();
+  res.send(allGroups || "Can't get all groups");
+};
 
-    res.status(400).send(`Can't delete groupe ${name}. ${eMsg}`);
+const allHierarchy = async (req: Request, res: Response) => {
+  const groupName = req.params.name;
+
+  try {
+    const groupChildren = await groupService.getGroupChildren(groupName);
+
+    res.send(groupChildren || "no groups an people in this group");
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+const findByField = async (req: Request, res: Response) => {
+  const key = req.params.key;
+  const value = req.params.value;
+
+  const foundedGroup = await groupService.getByField(key, value);
+
+  res.send(foundedGroup || `no group in ${key} => ${value}`);
+};
+
+const checkIfPersonInGroup = async (req: Request, res: Response) => {
+  const firstName = req.params.firstName;
+  const groupName = req.params.name;
+
+  try {
+    const groupAndPerson = await groupService.isInGroup(firstName, groupName);
+
+    res.send(groupAndPerson);
+  } catch (error) {
+    res.send(error);
   }
 };
 
@@ -38,20 +66,6 @@ const changeGroupName = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).send("Can't change group");
   }
-};
-
-const findByField = async (req: Request, res: Response) => {
-  const key = req.params.key;
-  const value = req.params.value;
-
-  const foundedGroup = await groupService.getByField(key, value);
-
-  res.send(foundedGroup || `no group in ${key} => ${value}`);
-};
-
-const allGroups = async (_: Request, res: Response) => {
-  const allGroups = await groupService.getAllGroups();
-  res.send(allGroups || "Can't get all groups");
 };
 
 const addGroupUnderGroup = async (req: any, res: any) => {
@@ -84,28 +98,14 @@ const moveGroupe = async (req: any, res: any) => {
   }
 };
 
-const checkIfPersonInGroup = async (req: Request, res: Response) => {
-  const firstName = req.params.firstName;
-  const groupName = req.params.name;
-
+const deleteGroup = async (req: Request, res: Response) => {
+  const name = req.params.name;
   try {
-    const groupAndPerson = await groupService.isInGroup(firstName, groupName);
-
-    res.send(groupAndPerson);
+    return res.send(await groupService.deleteGroupeByName(name));
   } catch (error) {
-    res.send(error);
-  }
-};
+    const eMsg = `${error}`.split("error")[0];
 
-const allHierarchy = async (req: Request, res: Response) => {
-  const groupName = req.params.name;
-
-  try {
-    const groupChildren = await groupService.getGroupChildren(groupName);
-
-    res.send(groupChildren || "no groups an people in this group");
-  } catch (error) {
-    res.send(error);
+    res.status(400).send(`Can't delete groupe ${name}. ${eMsg}`);
   }
 };
 

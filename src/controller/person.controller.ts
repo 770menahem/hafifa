@@ -5,6 +5,30 @@ const getAll = async (_: Request, res: Response) => {
   res.send(await personService.getAll());
 };
 
+const getByName = async (req: Request, res: Response) => {
+  const firstName = req.params.name;
+
+  try {
+    res.send(await personService.get(firstName));
+  } catch (error) {
+    res.status(400).send(`Can't add ${firstName} `);
+  }
+};
+
+const getPersonGroups = async (req: Request, res: Response) => {
+  const firstName = req.params.firstName;
+
+  try {
+    const groups = await personService.getGroups(firstName);
+
+    res.send(groups);
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).send("Something wrong");
+  }
+};
+
 const addPeron = async (req: Request, res: Response) => {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -40,29 +64,6 @@ const removePersonFromGroup = async (req: Request, res: Response) => {
   }
 };
 
-const deletePerson = async (req: Request, res: Response) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-
-  try {
-    res.send(
-      (await personService.del(firstName, lastName)) || "Nothing to delete "
-    );
-  } catch (error) {
-    res.status(400).send(`Can't add ${firstName} ${lastName}`);
-  }
-};
-
-const getByName = async (req: Request, res: Response) => {
-  const firstName = req.params.name;
-
-  try {
-    res.send(await personService.get(firstName));
-  } catch (error) {
-    res.status(400).send(`Can't add ${firstName} `);
-  }
-};
-
 const changeLastName = async (req: Request, res: Response) => {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -74,17 +75,16 @@ const changeLastName = async (req: Request, res: Response) => {
   }
 };
 
-const getPersonGroups = async (req: Request, res: Response) => {
-  const firstName = req.params.firstName;
+const deletePerson = async (req: Request, res: Response) => {
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
 
   try {
-    const groups = await personService.getGroups(firstName);
-
-    res.send(groups);
+    res.send(
+      (await personService.del(firstName, lastName)) || "Nothing to delete "
+    );
   } catch (error) {
-    console.log(error);
-
-    res.status(400).send("Something wrong");
+    res.status(400).send(`Can't add ${firstName} ${lastName}`);
   }
 };
 
