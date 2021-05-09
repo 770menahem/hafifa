@@ -16,6 +16,7 @@ const getGroups = async (firstName: string) => {
 
   return groups;
 };
+
 const del = async (firstName: string, lastName: string) => {
   const allPersonGroup = await getGroups(firstName);
 
