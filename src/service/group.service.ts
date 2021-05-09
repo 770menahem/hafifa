@@ -1,11 +1,39 @@
-import group from "../model/group.model";
 import { groupApi } from "../repo/group.repo";
 import personService from "./person.service";
 
 const createGroup = async (groupName: string, parentGroup: string) => {
-  const parentId = (await groupApi.oneByField({ groupName: parentGroup }))._id;
+  const parent = await groupApi.oneByField({ groupName: parentGroup });
 
-  return await groupApi.create(groupName, parentId);
+  if (!parent) {
+    return await groupApi.create(groupName);
+  } else {
+    const newGroupe = await groupApi.createWithParent(groupName, parent._id);
+
+    parent.groups.push(newGroupe._id);
+    await parent.save();
+
+    return newGroupe;
+  }
+};
+
+const deletedArr: any[] = [];
+
+const deleteGroupeById = async (id: string) => {
+  let deleted = await groupApi.deleteGroupeById(id);
+
+  deletedArr.push(deleted);
+
+  for (let i = 0; i < deleted.groups?.length; i++) {
+    deletedArr.push(await deleteGroupeById(deleted.groups[i]));
+  }
+};
+
+const deleteGroupeByName = async (groupName: string) => {
+  const group = await groupApi.oneByField({ groupName });
+
+  await deleteGroupeById(group._id);
+
+  return deletedArr.filter((del) => del);
 };
 
 const getByField = async (key: string, value: string) => {
@@ -210,6 +238,7 @@ export default {
   getByField,
   updateName,
   getPersonGroups,
+  deleteGroupeByName,
   insertPersonToGroup,
   removePersonFromGroup,
   isInGroup,

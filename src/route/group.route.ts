@@ -5,6 +5,10 @@ const groupRouter = express.Router();
 
 groupRouter.post("/create/:name/parent/:parent", groupController.createGroup);
 
+groupRouter.post("/create/:name", groupController.createGroup);
+
+groupRouter.delete("/delete/:name", groupController.deleteGroup);
+
 groupRouter.patch(
   "/change/name/:name/toName/:newName",
   groupController.changeGroupName
@@ -21,10 +25,10 @@ groupRouter.post(
 groupRouter.post("/move/:toMove/to/:moveTo", groupController.moveGroupe);
 
 groupRouter.get(
-  "/:firstName/group/:groupName",
+  "/person/:firstName/ingroup/:name",
   groupController.checkIfPersonInGroup
 );
 
-groupRouter.get("/:groupName/all", groupController.allHierarchy);
+groupRouter.get("/:name/all", groupController.allHierarchy);
 
 export default groupRouter;
