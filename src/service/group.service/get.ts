@@ -6,7 +6,13 @@ const getByField = async (key: string, value: string) => {
     [key]: value,
   };
 
-  return await groupApi.oneByField(fields);
+  const group = await groupApi.oneByField(fields);
+
+  if (!group) {
+    throw "no group found";
+  }
+
+  return group;
 };
 
 const getAllGroups = async () => {

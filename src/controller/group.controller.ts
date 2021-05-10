@@ -2,17 +2,17 @@ import { Request, Response } from "express";
 import groupService from "./../service/group.service";
 
 const createGroup = async (req: Request, res: Response) => {
-  const groupeName = req.params.name;
+  const groupName = req.params.name;
   const parentGroup = req.params.parent;
 
   try {
-    const newGroup = await groupService.createGroup(groupeName, parentGroup);
+    const newGroup = await groupService.createGroup(groupName, parentGroup);
 
     res.send(newGroup);
   } catch (error) {
     const eMsg = `${error}`.split("error")[0];
 
-    res.status(400).send(`Can't create groupe ${groupeName}. ${eMsg}`);
+    res.status(400).send(`Can't create group ${groupName}. ${eMsg}`);
   }
 };
 
@@ -37,9 +37,13 @@ const findByField = async (req: Request, res: Response) => {
   const key = req.params.key;
   const value = req.params.value;
 
-  const foundedGroup = await groupService.getByField(key, value);
+  try {
+    const foundedGroup = await groupService.getByField(key, value);
 
-  res.send(foundedGroup || `no group in ${key} => ${value}`);
+    res.send(foundedGroup);
+  } catch (error) {
+    res.status(400).send(`no group in ${key} => ${value}.`);
+  }
 };
 
 const checkIfPersonInGroup = async (req: Request, res: Response) => {
@@ -64,7 +68,7 @@ const changeGroupName = async (req: Request, res: Response) => {
 
     res.send(newGroup);
   } catch (error) {
-    res.status(400).send("Can't change group");
+    res.status(400).send(`Can't change group name. ${error}`);
   }
 };
 
@@ -83,7 +87,7 @@ const addGroupUnderGroup = async (req: any, res: any) => {
   }
 };
 
-const moveGroupe = async (req: any, res: any) => {
+const moveGroup = async (req: any, res: any) => {
   const to = req.params.moveTo;
   const child = req.params.toMove;
 
@@ -101,17 +105,19 @@ const moveGroupe = async (req: any, res: any) => {
 const deleteGroup = async (req: Request, res: Response) => {
   const name = req.params.name;
   try {
-    return res.send(await groupService.deleteGroupeByName(name));
+    return res.send(await groupService.deleteGroupByName(name));
   } catch (error) {
+    console.log(error);
+
     const eMsg = `${error}`.split("error")[0];
 
-    res.status(400).send(`Can't delete groupe ${name}. ${eMsg}`);
+    res.status(400).send(`Can't delete group ${name}. ${eMsg}`);
   }
 };
 
 export default {
   checkIfPersonInGroup,
-  moveGroupe,
+  moveGroup,
   addGroupUnderGroup,
   allGroups,
   createGroup,

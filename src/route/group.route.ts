@@ -23,7 +23,7 @@ groupRouter.post(
   groupController.addGroupUnderGroup
 );
 
-groupRouter.post("/move/:toMove/to/:moveTo", groupController.moveGroupe);
+groupRouter.post("/move/:toMove/to/:moveTo", groupController.moveGroup);
 
 groupRouter.patch(
   "/change/name/:name/toName/:newName",

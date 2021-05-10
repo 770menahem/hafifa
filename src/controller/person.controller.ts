@@ -42,25 +42,25 @@ const addPeron = async (req: Request, res: Response) => {
 
 const addPersonToGroup = async (req: Request, res: Response) => {
   const firstName = req.body.firstName;
-  const groupeName = req.body.groupName;
+  const groupName = req.body.groupName;
 
   try {
-    res.send(await personService.addPersonToGroup(firstName, groupeName));
+    res.send(await personService.addPersonToGroup(firstName, groupName));
   } catch (error) {
-    res.status(400).send(`Can't add ${firstName} to ${groupeName}`);
+    res.status(400).send(`Can't add ${firstName} to ${groupName}`);
   }
 };
 
 const removePersonFromGroup = async (req: Request, res: Response) => {
   const firstName = req.body.firstName;
-  const groupeName = req.body.groupName;
+  const groupName = req.body.groupName;
 
   try {
-    res.send(await personService.removePersonFromGroup(firstName, groupeName));
+    res.send(await personService.removePersonFromGroup(firstName, groupName));
   } catch (error) {
     res
       .status(400)
-      .send(`Can't remove ${firstName} from ${groupeName}. ${error}`);
+      .send(`Can't remove ${firstName} from ${groupName}. ${error}`);
   }
 };
 

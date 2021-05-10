@@ -1,22 +1,30 @@
 import { groupApi } from "../../repo/group.repo";
 import groupGet from "./get";
 
-const deletedArr: any[] = [];
+const deleteGroupById = async (id: string, deletedArr: any[]) => {
+  let deleted = await groupApi.deleteGroupById(id);
 
-const deleteGroupeById = async (id: string) => {
-  let deleted = await groupApi.deleteGroupeById(id);
+  if (deleted.parentGroup) {
+    const parent = await groupApi.byId(deleted.parentGroup);
+
+    if (parent) {
+      parent.groups.remove(deleted._id);
+      await parent.save();
+    }
+  }
 
   deletedArr.push(deleted);
 
-  for (let i = 0; i < deleted.groups?.length; i++) {
-    deletedArr.push(await deleteGroupeById(deleted.groups[i]));
+  for (let i = 0; i < deleted?.groups?.length; i++) {
+    deletedArr.push(await deleteGroupById(deleted.groups[i], deletedArr));
   }
 };
 
-const deleteGroupeByName = async (groupName: string) => {
+const deleteGroupByName = async (groupName: string) => {
+  const deletedArr: any[] = [];
   const group = await groupApi.oneByField({ groupName });
 
-  await deleteGroupeById(group._id);
+  await deleteGroupById(group._id, deletedArr);
 
   return deletedArr.filter((del) => del);
 };
@@ -36,6 +44,6 @@ const removePersonFromGroup = async (groupName: string, id: object) => {
 };
 
 export default {
-  deleteGroupeByName,
+  deleteGroupByName,
   removePersonFromGroup,
 };

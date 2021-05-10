@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dbUrl = "mongodb://localhost:27017";
 const dbName = "hafifa";
 
-const connectDB = async () => {
+const connect = async () => {
   await mongoose.connect(`${dbUrl}/${dbName}`, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -17,6 +17,6 @@ const connectDB = async () => {
   // mongoose.connection.close();
 };
 
-const closeDB = () => mongoose.connection.close();
+const close = () => mongoose.connection.close();
 
-export { closeDB, connectDB };
+export { close, connect };

@@ -34,7 +34,7 @@ export const groupApi = {
   create: async (groupName: string) => {
     return await new Group({ groupName }).save();
   },
-  deleteGroupeById: async (id: string) => {
+  deleteGroupById: async (id: string) => {
     const deleted = await Group.findByIdAndDelete(id);
 
     return deleted;

@@ -6,12 +6,12 @@ const createGroup = async (groupName: string, parentGroup: string) => {
     return await groupApi.create(groupName);
   } else {
     const parent = await groupApi.oneByField({ groupName: parentGroup });
-    const newGroupe = await groupApi.createWithParent(groupName, parent._id);
+    const newGroup = await groupApi.createWithParent(groupName, parent._id);
 
-    parent.groups.push(newGroupe._id);
+    parent.groups.push(newGroup._id);
     await parent.save();
 
-    return newGroupe;
+    return newGroup;
   }
 };
 
@@ -33,6 +33,8 @@ const moveGroup = async (moveTo: string, toMove: string) => {
     await move.save();
     parentGroup.groups.push(move._id);
     await parentGroup.save();
+
+    throw result;
   }
 
   return result;
@@ -40,14 +42,17 @@ const moveGroup = async (moveTo: string, toMove: string) => {
 
 const connectGroups = async (insertTo: string, toInsert: string) => {
   try {
-    await insertToGroup(insertTo, toInsert);
+    const [childGroup, targetGroup] = await insertToGroup(insertTo, toInsert);
+
     return {
-      target: await groupApi.oneByField({ groupName: insertTo }),
-      child: await groupApi.oneByField({ groupName: toInsert }),
+      target: targetGroup,
+      child: childGroup,
     };
   } catch (error) {
+    console.log(error);
+
     return {
-      error: error,
+      error,
       groups: {
         target: await groupApi.oneByField({ groupName: insertTo }),
         child: await groupApi.oneByField({ groupName: toInsert }),
@@ -62,13 +67,13 @@ const insertToGroup = async (targetName: string, childName: string) => {
   const targetGroup = await groupApi.oneByField({ groupName: targetName });
 
   if (childGroup.parentGroup) {
-    throw "groupe already has parent group";
+    throw "group already has parent group";
   }
 
   if (targetGroup && childGroup) {
     const childId = childGroup._id.toString();
 
-    await validateGroupe(targetGroup, childId);
+    await validateGroup(targetGroup, childId);
 
     targetGroup.groups.push(childId);
 
@@ -79,6 +84,8 @@ const insertToGroup = async (targetName: string, childName: string) => {
   } else {
     throw "group not exists";
   }
+
+  return [childGroup, targetGroup];
 };
 
 const updateName = async (name: string, newName: string) => {
@@ -110,13 +117,13 @@ export default {
   insertPersonToGroup,
 };
 
-const validateGroupe = async (group: any, id: string) => {
+const validateGroup = async (group: any, id: string) => {
   if (
     group.groups.some((i: object) => i.toString() === id) ||
     group.parentGroup?.toString() === id ||
     group._id.toString() === id
   ) {
-    throw "cant add groupe";
+    throw "cant add group";
   }
 
   while (group.parentGroup) {
@@ -125,20 +132,20 @@ const validateGroupe = async (group: any, id: string) => {
       group.parentGroup?.toString() === id ||
       group._id.toString() === id
     ) {
-      throw "cant add groupe";
+      throw "cant add group";
     }
 
     const parent = await groupApi.byId(group.parentGroup);
 
     if (parent?.groups?.some((i: object) => i.toString() === id)) {
-      throw "cant add groupe";
+      throw "cant add group";
     }
 
     group = parent;
   }
 
   if (!(await validateChild(group, id))) {
-    throw "cant add groupe";
+    throw "cant add group";
   }
 };
 
@@ -146,9 +153,7 @@ const validateChild = async (group: any, id: string) => {
   for (let i = 0; i < group.groups?.length; i++) {
     const child = await groupApi.byId(group.groups[i]);
 
-    if (
-      child.toObject()?.groups?.some((_id: object) => _id.toString() === id)
-    ) {
+    if (child?.groups?.some((_id: object) => _id.toString() === id)) {
       return false;
     }
 
