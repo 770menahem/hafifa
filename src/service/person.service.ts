@@ -17,15 +17,16 @@ const getGroups = async (firstName: string) => {
   return groups;
 };
 
-const del = async (firstName: string, lastName: string) => {
+const del = async (firstName: string) => {
   const allPersonGroup = await getGroups(firstName);
 
   for (let i = 0; i < allPersonGroup.length; i++) {
     removePersonFromGroup(firstName, allPersonGroup[i].groupName);
   }
 
-  return await personApi.del(firstName, lastName);
+  return await personApi.del(firstName);
 };
+
 const changeLastName = async (firstName: string, lastName: string) => {
   return await personApi.changeLastName(firstName, lastName);
 };
@@ -42,6 +43,8 @@ const addPersonToGroup = async (firstName: string, groupName: string) => {
 };
 const removePersonFromGroup = async (firstName: string, groupName: string) => {
   const person = await personApi.getByName(firstName);
+
+  if (!person) throw "person not exist";
 
   const group = await groupService.removePersonFromGroup(groupName, person._id);
 

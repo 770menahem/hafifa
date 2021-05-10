@@ -23,8 +23,8 @@ const personApi = {
 
     return await person.save();
   },
-  del: async (firstName: string, lastName: string) => {
-    return await Person.findOneAndDelete({ firstName, lastName });
+  del: async (firstName: string) => {
+    return await Person.findOneAndDelete({ firstName });
   },
 };
 

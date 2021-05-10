@@ -107,8 +107,6 @@ const deleteGroup = async (req: Request, res: Response) => {
   try {
     return res.send(await groupService.deleteGroupByName(name));
   } catch (error) {
-    console.log(error);
-
     const eMsg = `${error}`.split("error")[0];
 
     res.status(400).send(`Can't delete group ${name}. ${eMsg}`);

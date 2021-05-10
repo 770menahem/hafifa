@@ -10,6 +10,6 @@ personRoute.post("/", personController.addPeron);
 personRoute.post("/toGroup", personController.addPersonToGroup);
 personRoute.patch("/newLastName/", personController.changeLastName);
 personRoute.delete("/fromGroup", personController.removePersonFromGroup);
-personRoute.delete("/", personController.deletePerson);
+personRoute.delete("/name/:name", personController.deletePerson);
 
 export default personRoute;

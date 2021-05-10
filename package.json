@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha -r ts-node/register src/test/*.ts",
+    "testP": "mocha -r ts-node/register src/test/person.*.ts",
+    "testG": "mocha -r ts-node/register src/test/group.*.ts",
     "start": "nodemon src/server.ts"
   },
   "keywords": [],

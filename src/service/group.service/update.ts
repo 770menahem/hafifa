@@ -101,7 +101,7 @@ const insertPersonToGroup = async (groupName: string, id: object) => {
   const group = await groupGet.getByField("groupName", groupName);
 
   if (group.persons.includes(id)) {
-    return { error: "person already in group", group };
+    throw { error: "person already in group", group: group };
   }
 
   group.persons.push(id);

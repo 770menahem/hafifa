@@ -9,9 +9,14 @@ const getByName = async (req: Request, res: Response) => {
   const firstName = req.params.name;
 
   try {
-    res.send(await personService.get(firstName));
+    const person = await personService.get(firstName);
+
+    if (!person) {
+      throw "no found";
+    }
+    res.send(person);
   } catch (error) {
-    res.status(400).send(`Can't add ${firstName} `);
+    res.status(400).send(`Can't find ${firstName} `);
   }
 };
 
@@ -23,9 +28,7 @@ const getPersonGroups = async (req: Request, res: Response) => {
 
     res.send(groups);
   } catch (error) {
-    console.log(error);
-
-    res.status(400).send("Something wrong");
+    res.status(400).send(`Something wrong, ${error}`);
   }
 };
 
@@ -47,7 +50,9 @@ const addPersonToGroup = async (req: Request, res: Response) => {
   try {
     res.send(await personService.addPersonToGroup(firstName, groupName));
   } catch (error) {
-    res.status(400).send(`Can't add ${firstName} to ${groupName}`);
+    res
+      .status(400)
+      .send({ msg: `Can't add ${firstName} to ${groupName}`, ...error });
   }
 };
 
@@ -60,13 +65,13 @@ const removePersonFromGroup = async (req: Request, res: Response) => {
   } catch (error) {
     res
       .status(400)
-      .send(`Can't remove ${firstName} from ${groupName}. ${error}`);
+      .send({ msg: `Can't remove ${firstName} from ${groupName}.`, error });
   }
 };
 
 const changeLastName = async (req: Request, res: Response) => {
   const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
+  const lastName = req.body.newLastName;
 
   try {
     res.send(await personService.changeLastName(firstName, lastName));
@@ -76,15 +81,12 @@ const changeLastName = async (req: Request, res: Response) => {
 };
 
 const deletePerson = async (req: Request, res: Response) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
+  const firstName = req.params.name;
 
   try {
-    res.send(
-      (await personService.del(firstName, lastName)) || "Nothing to delete "
-    );
+    res.send((await personService.del(firstName)) || "Nothing to delete ");
   } catch (error) {
-    res.status(400).send(`Can't add ${firstName} ${lastName}`);
+    res.status(400).send(`Can't delete ${firstName}`);
   }
 };
 

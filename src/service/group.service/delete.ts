@@ -32,12 +32,14 @@ const deleteGroupByName = async (groupName: string) => {
 const removePersonFromGroup = async (groupName: string, id: object) => {
   const group = await groupGet.getByField("groupName", groupName);
 
+  if (!group) throw "group not exist";
+
   const personNum = group.persons.length;
 
   group.persons.remove(id);
 
   if (personNum === group.persons.length) {
-    throw "person doe's not exists";
+    throw "person doe's not exists in this group";
   }
 
   return await group.save();
