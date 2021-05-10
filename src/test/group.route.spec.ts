@@ -31,7 +31,7 @@ describe("Group api ", () => {
     it("get specific group", (done) => {
       chai
         .request(app)
-        .get("/api/group/fields/groupName/leibman")
+        .get("/api/group/fields?key=groupName&value=leibman")
         .then(({ body }) => {
           assert.equal(body.groupName, "leibman");
           done();
@@ -84,7 +84,7 @@ describe("Group api ", () => {
     it("get group by key value (groupName)", (done) => {
       chai
         .request(app)
-        .get("/api/group/fields/groupName/leibman")
+        .get("/api/group/fields?key=groupName&value=leibman")
         .then((res) => {
           assert.equal(res.status, 200);
           assert.deepEqual(res.body.groupName, "leibman");
@@ -96,7 +96,7 @@ describe("Group api ", () => {
     it("get group by key value (groupName) fail", (done) => {
       chai
         .request(app)
-        .get("/api/group/fields/groupname/leibman")
+        .get("/api/group/fields?key=groupname&value=leibman")
         .then((res) => {
           assert.equal(res.status, 400);
           assert.equal(res.text, "no group in groupname => leibman.");
@@ -108,7 +108,7 @@ describe("Group api ", () => {
     it("get group by key value (parentGroup)", (done) => {
       chai
         .request(app)
-        .get("/api/group/fields/parentGroup/60939c25559b0d03ac4527c2")
+        .get("/api/group/fields?key=parentGroup&value=60939c25559b0d03ac4527c2")
         .then((res) => {
           assert.equal(res.status, 200);
           assert.equal(res.body.groupName, "12");
@@ -120,7 +120,7 @@ describe("Group api ", () => {
     it("get group by key value (parentGroup)", (done) => {
       chai
         .request(app)
-        .get("/api/group/fields/parentGroup/60939c25559b0d03ac4527c2")
+        .get("/api/group/fields?key=parentGroup&value=60939c25559b0d03ac4527c2")
         .then((res) => {
           assert.equal(res.status, 200);
           assert.notEqual(res.body.groupName, "11");
@@ -132,7 +132,7 @@ describe("Group api ", () => {
     it("get group by key value (parentGroup) fail", (done) => {
       chai
         .request(app)
-        .get("/api/group/fields/parentGroup/11")
+        .get("/api/group/fields?key=parentGroup&value=11")
         .then((res) => {
           assert.equal(res.status, 400);
           assert.notEqual(res.body.groupName, "no group in parentGroup => 11.");
