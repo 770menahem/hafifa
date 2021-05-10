@@ -280,7 +280,7 @@ describe("Group api ", () => {
         .catch(done);
     });
 
-    it("delete group and child", async (done) => {
+    it("delete group and child", (done) => {
       chai
         .request(app)
         .post("/api/group/create/testDel")
