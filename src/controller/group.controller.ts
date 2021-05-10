@@ -34,11 +34,11 @@ const allHierarchy = async (req: Request, res: Response) => {
 };
 
 const findByField = async (req: Request, res: Response) => {
-  const key = req.params.key;
-  const value = req.params.value;
+  const key = req.query.key;
+  const value = req.query.value;
 
   try {
-    const foundedGroup = await groupService.getByField(key, value);
+    const foundedGroup = await groupService.getByField(`${key}`, `${value}`);
 
     res.send(foundedGroup);
   } catch (error) {

@@ -10,7 +10,7 @@ groupRouter.get(
 
 groupRouter.get("/:name/all", groupController.allHierarchy);
 
-groupRouter.get("/fields/:key/:value", groupController.findByField);
+groupRouter.get("/fields", groupController.findByField);
 
 groupRouter.get("/all", groupController.allGroups);
 
